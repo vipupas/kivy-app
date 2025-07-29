@@ -72,18 +72,21 @@ jobs:
 
     - name: Install Android SDK components
       run: |
-        # Accept all licenses
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+        # Accept all licenses first
+        echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update || true
         
-        # Install required components
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools"
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.2"
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33"
-        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;25.2.9519653"
+        # Install required components with explicit version
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "platform-tools"
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;33.0.2"
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-33"
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;25.2.9519653"
         
-        # Verify installation
-        ls -la $ANDROID_HOME/build-tools/
-        ls -la $ANDROID_HOME/ndk/
+        # Verify installation and show what was installed
+        echo "Installed build-tools versions:"
+        ls -la $ANDROID_HOME/build-tools/ || echo "No build-tools found"
+        echo "Installed NDK versions:"
+        ls -la $ANDROID_HOME/ndk/ || echo "No NDK found"
 
     - name: Cache Buildozer directories
       uses: actions/cache@v4
