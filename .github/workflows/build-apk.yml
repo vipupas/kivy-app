@@ -31,7 +31,9 @@ jobs:
           python3-pip \
           openjdk-17-jdk \
           autoconf \
+          automake \
           libtool \
+          libtool-bin \
           pkg-config \
           zlib1g-dev \
           libncurses5-dev \
@@ -49,7 +51,11 @@ jobs:
           libavformat-dev \
           libavcodec-dev \
           libgstreamer1.0-dev \
-          libgstreamer-plugins-base1.0-dev
+          libgstreamer-plugins-base1.0-dev \
+          gettext \
+          m4 \
+          texinfo \
+          libltdl-dev
 
     - name: Set up Android SDK manually
       run: |
@@ -221,7 +227,7 @@ jobs:
         export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/25c
         export ANDROID_SDK_ROOT=$ANDROID_HOME
         export ANDROID_HOME=$ANDROID_HOME
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/33.0.2
+        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/33.0.2:$ANDROID_HOME/tools/bin
         
         # Additional environment variables for buildozer
         export AIDL=$ANDROID_HOME/build-tools/33.0.2/aidl
@@ -233,6 +239,7 @@ jobs:
         echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT" 
         echo "ANDROID_NDK_ROOT: $ANDROID_NDK_ROOT"
         echo "AIDL: $AIDL"
+        echo "PATH: $PATH"
         echo "Available build-tools:"
         ls -la $ANDROID_HOME/build-tools/ || echo "No build-tools found"
         echo "Available platform-tools:"
@@ -243,6 +250,13 @@ jobs:
         ls -la $ANDROID_HOME/build-tools/33.0.2/aidl || echo "AIDL not found"
         echo "Buildozer SDK link:"
         ls -la ~/.buildozer/android/platform/android-sdk || echo "Buildozer SDK link not found"
+        echo "Legacy sdkmanager:"
+        ls -la $ANDROID_HOME/tools/bin/sdkmanager || echo "Legacy sdkmanager not found"
+        
+        # Test sdkmanager
+        echo "Testing sdkmanager:"
+        which sdkmanager || echo "sdkmanager not in PATH"
+        $ANDROID_HOME/tools/bin/sdkmanager --version || echo "sdkmanager execution failed"
         
         # Build the APK
         buildozer android debug
