@@ -44,6 +44,10 @@ android.ndk = 25c
 android.ndk_api = 21
 # (str) Android build-tools version to use
 android.build_tools = 33.0.2
+# (str) Path to the Android SDK directory
+android.sdk_path = ~/android-sdk
+# (str) Path to the Android NDK directory
+android.ndk_path = ~/android-sdk/ndk/25c
 # (bool) Use --private data storage (True) or --dir public storage (False)
 android.private_storage = True
 # (bool) Enable AndroidX support. Enable when 'android.gradle_dependencies'
